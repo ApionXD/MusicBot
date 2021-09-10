@@ -13,22 +13,20 @@ import java.util.Properties;
 public class PropManager {
     public static final String PROP_FILE_PATH = "bot.properties";
 
+    //Reads/creates a new properties files and checks that it has all values that are needed.
     @SneakyThrows
-    public static void createDefaultProperties(Path propFile) {
-        Properties defaultProperties = new BotProperties();
-        defaultProperties.store(new FileWriter(propFile.toFile()), "");
-    }
-    //There isn't actually a way for IOExceptions to be thrown here, they are handled by forceReadFile()
-    @SneakyThrows
-    public static Properties loadPropertyFile() {
+    public static BotProperties loadBotPropertyFile() {
         Path propFile = FileManager.forceReadFile(PROP_FILE_PATH);
         FileReader propReader =  new FileReader(propFile.toFile());
-        if (!propReader.ready()) {
-            log.warn("Properties file is empty!");
-            PropManager.createDefaultProperties(propFile);
-        }
-        Properties properties = new Properties();
+        BotProperties properties = new BotProperties();
         properties.load(propReader);
+        properties.updateProperties();
+        saveProperties(properties, propFile);
         return properties;
+    }
+    //There isn't actually a way for IOExceptions to be thrown here, they are handled when all property files are read
+    @SneakyThrows
+    public static void saveProperties(Properties properties, Path propFile) {
+        properties.store(new FileWriter(propFile.toFile()), "");
     }
 }
