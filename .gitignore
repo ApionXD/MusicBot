@@ -5,4 +5,6 @@
 build
 # Ignore IDEA config directory
 /.idea/
+
 /app/bot.properties
+/app/settings/
