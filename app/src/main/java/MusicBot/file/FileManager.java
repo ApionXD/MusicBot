@@ -41,11 +41,12 @@ public class FileManager {
         if (!Files.exists(filePath)) {
             log.warn(fileName + " doesn't exist! Attempting to create it now!");
             try {
-                Files.createFile(filePath);
+                    Files.createDirectories(filePath.subpath(0, filePath.getNameCount() - 1));
+                    Files.createFile(filePath);
             }
             catch (IOException e) {
                 log.error("Could not create " + fileName + "! This may cause issues!");
-                log.trace(e.toString());
+                log.debug(e.toString());
             }
         }
         return filePath;

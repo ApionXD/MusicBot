@@ -1,5 +1,6 @@
 package MusicBot;
 
+import MusicBot.listener.ReadyListener;
 import MusicBot.properties.PropManager;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -32,5 +33,6 @@ public class Bot {
             log.error("Token not valid! Please check your bot.properties file!");
             System.exit(1);
         }
+        jda.addEventListener(new ReadyListener());
     }
 }
