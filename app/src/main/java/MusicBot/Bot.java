@@ -11,7 +11,6 @@ import javax.security.auth.login.LoginException;
 import java.util.Properties;
 
 @Slf4j @Getter
-
 public class Bot {
     final Properties botProperties;
     final String botToken;
