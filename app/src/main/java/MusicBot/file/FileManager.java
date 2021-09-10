@@ -1,5 +1,7 @@
 package MusicBot.file;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.FileNotFoundException;
@@ -12,6 +14,7 @@ import java.nio.file.Path;
 @Slf4j
 public class FileManager {
     public static final FileSystem FS = FileSystems.getDefault();
+    public static final Gson GSON_INSTANCE = new GsonBuilder().setPrettyPrinting().create();
     public static Path openFile(String fileName) throws FileNotFoundException {
         final Path path =  FS.getPath(fileName);
         log.debug("Checking " + path.toString() + " for " + fileName);
