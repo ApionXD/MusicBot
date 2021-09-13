@@ -2,7 +2,6 @@ package MusicBot.settings;
 
 import MusicBot.MusicBot;
 import MusicBot.file.FileManager;
-import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -10,11 +9,13 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Guild;
 
-import java.io.*;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Scanner;
+import java.util.concurrent.ExecutionException;
 
 @Getter
 @Slf4j
@@ -24,10 +25,12 @@ public class SettingsManager {
 
 
     public SettingsManager() {
-        genCache();
         initSettings();
+        genCache();
+        log.debug("Finished initializing SettingsManager!");
     }
     private void genCache() {
+        log.debug("Generating cache!");
         settingMap = CacheBuilder.newBuilder()
                 .maximumSize(100)
                 .build(new CacheLoader<String, Settings>() {
@@ -44,9 +47,12 @@ public class SettingsManager {
     }
     //Loops through all guilds, generates missing settings files.
     private void initSettings() {
+        log.debug(String.valueOf(MusicBot.musicBot == null));
         List<Guild> guildList = MusicBot.musicBot.getJda().getGuilds();
+        log.info("Found " + guildList.size() + " guilds");
         guildList.forEach(g -> {
             Path settingFile = FileManager.forceReadFile("settings\\" + g.getName() + ".json");
+            log.info("Found setting file at " + settingFile);
             FileWriter settingsWriter = null;
             try {
                 if (Files.readString(settingFile).length() == 0) {
@@ -70,5 +76,13 @@ public class SettingsManager {
             }
         });
     }
-
+    public Settings getSettingsFromGuildID(String id) {
+        try {
+            return settingMap.get(id);
+        }
+        catch (ExecutionException e) {
+            log.error(e.toString());
+        }
+        return null;
+    }
 }
