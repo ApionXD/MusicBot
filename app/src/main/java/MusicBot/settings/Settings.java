@@ -1,5 +1,6 @@
 package MusicBot.settings;
 
+import MusicBot.MusicBot;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,9 +8,10 @@ import lombok.Setter;
 @Getter
 public class Settings {
     private String prefix;
-    private String guildID;
+    private String commandChannelID;
 
     public Settings() {
         prefix = "~";
+        commandChannelID = null;
     }
 }

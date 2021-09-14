@@ -20,10 +20,15 @@ import java.util.concurrent.Future;
 
 @Slf4j
 public class MusicUtil {
+    //All of these caches map a guildID to their corresponding objects
     //Memory overhead here might be unnecessary, maybe just make it a map.
     private LoadingCache<String, AudioPlayerManager> managers;
     //Might eventually need to be a list of audio players
+    //These caches limit a guild to having only one player/scheduler each
+    //To get around this, we need to make the String map to a list of AudioPlayers/TrackSchedulers, then we need a way to map a player to a scheduler
+
     private LoadingCache<String, AudioPlayer> players;
+    private LoadingCache<String, TrackScheduler> schedulers;
     public MusicUtil() {
         managers = CacheBuilder.newBuilder().maximumSize(20).build(new CacheLoader<String, AudioPlayerManager>() {
             @Override
@@ -39,6 +44,14 @@ public class MusicUtil {
                 return managers.get(key).createPlayer();
             }
         });
+        schedulers = CacheBuilder.newBuilder().maximumSize(20).build(new CacheLoader<String, TrackScheduler>() {
+            @Override
+            public TrackScheduler load(String key) throws Exception {
+                TrackScheduler scheduler = new TrackScheduler(key);
+                players.get(key).addListener(scheduler);
+                return scheduler;
+            }
+        });
     }
     public JDASendHandler getSendHandler(String guildID) {
         try {
@@ -49,17 +62,42 @@ public class MusicUtil {
         return null;
     }
     //Returns either a success or failure message.
-    public LoadResult playSong(String guildID, String link, CommandEvent e) {
+    public void queueSong(String guildID, String link, CommandEvent e) {
         try {
             AudioPlayerManager mgr = managers.get(guildID);
             AudioPlayer player = players.get(guildID);
-            LoadResult result = new LoadResult(player, e);
+            TrackScheduler scheduler = schedulers.get(guildID);
+            LoadResult result = new LoadResult(e);
             mgr.loadItem(link, result);
-            return result;
+        }
+        catch (ExecutionException exception) {
+            exception.printStackTrace();
+        }
+    }
+    public AudioPlayerManager getManagerFromID(String id){
+        try {
+            return managers.get(id);
         } catch (ExecutionException exception) {
             exception.printStackTrace();
         }
         return null;
     }
+    public AudioPlayer getPlayerFromID(String id){
+        try {
+            return players.get(id);
+        } catch (ExecutionException exception) {
+            exception.printStackTrace();
+        }
+        return null;
+    }
+    public TrackScheduler getSchedulerFromID(String s) {
+        try {
+            return schedulers.get(s);
+        } catch (ExecutionException exception) {
+            exception.printStackTrace();
+        }
+        return null;
+    }
+
 }
 

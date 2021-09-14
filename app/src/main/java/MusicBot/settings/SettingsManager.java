@@ -40,8 +40,8 @@ public class SettingsManager {
                         String fileName = "settings\\" + MusicBot.musicBot.getJda().getGuildById(key).getName() + ".json";
                         Path filePath = FileManager.forceReadFile(fileName);
                         FileReader reader = new FileReader(fileName);
-                        log.info(Files.readString(filePath));
-                        return FileManager.GSON_INSTANCE.fromJson(reader, Settings.class);
+                        Settings result = FileManager.GSON_INSTANCE.fromJson(reader, Settings.class);
+                        return result;
                     }
                 });
     }
@@ -62,6 +62,8 @@ public class SettingsManager {
                         log.warn("Settings file will be at: " + settingFile);
                         log.warn(Files.readString(settingFile));
                         Settings defaultSettings = new Settings();
+                        log.debug("Generating complex default settings.");
+                        genDefaultComplexSettings(defaultSettings, g.getId());
                         String outputJson = FileManager.GSON_INSTANCE.toJson(defaultSettings);
                         settingsWriter.write(outputJson);
                         settingsWriter.close();
@@ -84,5 +86,10 @@ public class SettingsManager {
             log.error(e.toString());
         }
         return null;
+    }
+    private void genDefaultComplexSettings(Settings s, String guildID) {
+        final String channelID = MusicBot.musicBot.getJda().getGuildById(guildID).getDefaultChannel().getId();
+        log.debug("Default command channel is: " + channelID);
+        s.setCommandChannelID(channelID);
     }
 }
