@@ -19,9 +19,12 @@ import java.util.ArrayList;
 
 @Slf4j
 public class TrackScheduler extends AudioEventAdapter {
-    private final ArrayList<AudioTrack> tracks;
+
     private final AudioPlayer player;
     private final String guildID;
+    @Getter
+    private ArrayList<AudioTrack> tracks;
+
     @Getter
     private boolean isPlaying;
     public TrackScheduler(String id) {
@@ -37,10 +40,14 @@ public class TrackScheduler extends AudioEventAdapter {
         super.onTrackEnd(player, track, endReason);
         log.warn("Num tracks: " + tracks.size());
         log.debug(track.getInfo().title + " ended, playing next.");
-        tracks.remove(0);
-        final AudioTrack newTrack = tracks.get(0);
-        player.playTrack(newTrack);
-        sendSongMessage(newTrack.getInfo());
+        if (tracks.size() > 0) {
+            log.debug("No tracks left to play!");
+            tracks.remove(0);
+            final AudioTrack newTrack = tracks.get(0);
+            player.playTrack(newTrack);
+            sendSongMessage(newTrack.getInfo());
+        }
+
     }
 
     @Override
@@ -78,5 +85,8 @@ public class TrackScheduler extends AudioEventAdapter {
                 .addField("Artist", trackInfo.author, true)
                 .addField("Length", trackLength, true);
         channel.sendMessage(resultingEmbed.build()).queue();
+    }
+    public void clearAllTracks() {
+        tracks = Lists.newArrayList();
     }
 }

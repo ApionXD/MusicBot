@@ -1,6 +1,7 @@
 package MusicBot;
 
 import MusicBot.audio.MusicUtil;
+import MusicBot.command.audio.Part;
 import MusicBot.command.base.CommandUtil;
 import MusicBot.command.HelloWorld;
 import MusicBot.command.audio.Play;
@@ -61,5 +62,6 @@ public class Bot {
         musicUtil = new MusicUtil();
         commandUtil.addCommands(new HelloWorld());
         commandUtil.addCommands(new Play());
+        commandUtil.addCommands(new Part());
     }
 }
