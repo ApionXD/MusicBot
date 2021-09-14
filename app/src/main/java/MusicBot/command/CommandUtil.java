@@ -15,7 +15,7 @@ import java.util.concurrent.ExecutionException;
 @Slf4j
 public class CommandUtil {
     private static final Command ERROR_COMMAND = new BasicError();
-    public static final MessageEmbed BASE_EMBED = new EmbedBuilder().setColor(255).setFooter("An improved music bot!").build();
+    public static final MessageEmbed BASE_EMBED = new EmbedBuilder().setColor(255).setFooter("An improved music bot!").setAuthor("MusicBot").build();
 
     private final HashSet<Command> commands;
     private final LoadingCache<String, Command> commandCache;
