@@ -1,9 +1,9 @@
 package MusicBot;
 
 import MusicBot.audio.MusicUtil;
-import MusicBot.command.CommandUtil;
+import MusicBot.command.base.CommandUtil;
 import MusicBot.command.HelloWorld;
-import MusicBot.command.Play;
+import MusicBot.command.audio.Play;
 import MusicBot.listener.MessageListener;
 import MusicBot.properties.PropManager;
 import MusicBot.settings.SettingsManager;

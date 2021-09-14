@@ -1,9 +1,9 @@
-package MusicBot.command;
+package MusicBot.command.base;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class BasicError extends Command{
+public class BasicError extends Command {
 
     @Override
     public void executeCommand(CommandEvent e) {

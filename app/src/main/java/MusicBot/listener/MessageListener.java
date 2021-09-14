@@ -1,7 +1,7 @@
 package MusicBot.listener;
 
 import MusicBot.MusicBot;
-import MusicBot.command.CommandEvent;
+import MusicBot.command.base.CommandEvent;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;

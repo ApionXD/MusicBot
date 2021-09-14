@@ -1,4 +1,4 @@
-package MusicBot.command;
+package MusicBot.command.base;
 
 import MusicBot.MusicBot;
 import com.google.common.collect.Lists;

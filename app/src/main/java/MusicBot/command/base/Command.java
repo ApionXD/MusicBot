@@ -1,4 +1,4 @@
-package MusicBot.command;
+package MusicBot.command.base;
 
 import lombok.Getter;
 import lombok.Setter;

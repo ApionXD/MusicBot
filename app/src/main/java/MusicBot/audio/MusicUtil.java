@@ -1,6 +1,6 @@
 package MusicBot.audio;
 
-import MusicBot.command.CommandEvent;
+import MusicBot.command.base.CommandEvent;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;

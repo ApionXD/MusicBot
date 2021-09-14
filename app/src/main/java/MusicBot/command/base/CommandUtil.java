@@ -1,4 +1,4 @@
-package MusicBot.command;
+package MusicBot.command.base;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;

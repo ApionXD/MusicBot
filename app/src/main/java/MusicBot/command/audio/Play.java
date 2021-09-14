@@ -1,12 +1,14 @@
-package MusicBot.command;
+package MusicBot.command.audio;
 
 import MusicBot.MusicBot;
 import MusicBot.audio.MusicUtil;
+import MusicBot.command.base.Command;
+import MusicBot.command.base.CommandEvent;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.managers.AudioManager;
 
 @Slf4j
-public class Play extends Command{
+public class Play extends Command {
     public static final String NAME = "play";
     public Play() {
         this.setCommandName(NAME);

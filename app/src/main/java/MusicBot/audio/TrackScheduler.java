@@ -1,7 +1,7 @@
 package MusicBot.audio;
 
 import MusicBot.MusicBot;
-import MusicBot.command.CommandUtil;
+import MusicBot.command.base.CommandUtil;
 import com.google.common.collect.Lists;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
