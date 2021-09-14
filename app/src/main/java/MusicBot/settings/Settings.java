@@ -1,6 +1,5 @@
 package MusicBot.settings;
 
-import MusicBot.MusicBot;
 import lombok.Getter;
 import lombok.Setter;
 

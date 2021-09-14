@@ -1,11 +1,9 @@
 package MusicBot.audio;
 
 import MusicBot.MusicBot;
-import MusicBot.command.CommandEvent;
 import MusicBot.command.CommandUtil;
 import com.google.common.collect.Lists;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
-import com.sedmelluq.discord.lavaplayer.player.event.AudioEvent;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
