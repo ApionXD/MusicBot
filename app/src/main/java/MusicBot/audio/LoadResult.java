@@ -54,6 +54,10 @@ public class LoadResult implements AudioLoadResultHandler {
     public void noMatches() {
         EmbedBuilder resultingEmbed = new EmbedBuilder(CommandUtil.BASE_EMBED).setDescription("Couldn't find a song at that link!");
         sendMessageToOriginalChannel(resultingEmbed.build());
+        if (scheduler.getTracks().size() == 0) {
+            MusicBot.musicBot.getJda().getGuildById(guildID).getAudioManager().closeAudioConnection();
+        }
+
     }
 
     @Override
