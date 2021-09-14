@@ -55,6 +55,7 @@ public class LoadResult implements AudioLoadResultHandler {
         EmbedBuilder resultingEmbed = new EmbedBuilder(CommandUtil.BASE_EMBED).setDescription("Couldn't find a song at that link!");
         sendMessageToOriginalChannel(resultingEmbed.build());
         if (scheduler.getTracks().size() == 0) {
+            log.info("No tracks to play for guild " + guildID);
             MusicBot.musicBot.getJda().getGuildById(guildID).getAudioManager().closeAudioConnection();
         }
 

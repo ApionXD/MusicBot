@@ -67,6 +67,7 @@ public class TrackScheduler extends AudioEventAdapter {
     }
 
     public void playFirstTrackInQueue() {
+        log.debug("Playing first track in queue for guild " + guildID);
         isPlaying = true;
         final AudioTrack track = tracks.get(0);
         final AudioTrackInfo trackInfo = track.getInfo();
@@ -87,6 +88,7 @@ public class TrackScheduler extends AudioEventAdapter {
         channel.sendMessage(resultingEmbed.build()).queue();
     }
     public void clearAllTracks() {
+        log.info("Clearing all tracks for " + guildID);
         tracks = Lists.newArrayList();
     }
 }

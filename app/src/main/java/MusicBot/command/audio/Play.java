@@ -24,8 +24,8 @@ public class Play extends Command {
         m.setSendingHandler(musicUtil.getSendHandler(guildID));
         log.debug("Joining channel.");
         m.openAudioConnection(e.getOrigEvent().getGuild().getVoiceChannels().get(0));
+        log.debug("Song loading...");
         musicUtil.queueSong(guildID, e.getWords().get(1), e);
-        log.debug("Waiting for song to load...");
     }
 
 }
