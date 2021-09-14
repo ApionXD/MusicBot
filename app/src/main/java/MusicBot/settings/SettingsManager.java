@@ -2,25 +2,28 @@ package MusicBot.settings;
 
 import MusicBot.MusicBot;
 import MusicBot.file.FileManager;
+import ch.qos.logback.core.util.FileUtil;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Guild;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 @Getter
 @Slf4j
 public class SettingsManager {
-
     private LoadingCache<String, Settings> settingMap;
 
 
@@ -91,5 +94,25 @@ public class SettingsManager {
         final String channelID = MusicBot.musicBot.getJda().getGuildById(guildID).getDefaultChannel().getId();
         log.debug("Default command channel is: " + channelID);
         s.setCommandChannelID(channelID);
+    }
+    public void saveSettingsForGuild(String guildID) {
+        Settings s;
+        StringBuilder fileName = new StringBuilder("settings\\");
+
+        try {
+            fileName.append(MusicBot.musicBot.getJda().getGuildById(guildID).getName());
+            fileName.append(".json");
+            Path file = FileManager.openFile(fileName.toString());
+
+            s = settingMap.get(guildID);
+            log.info("Writing new settings to " + fileName.toString());
+            FileWriter writer = new FileWriter(file.toFile());
+            FileManager.GSON_INSTANCE.toJson(s, writer);
+            writer.close();
+            //log.info("Old settings file: " +  Files.readString(file));
+        }
+        catch (ExecutionException | IOException exception) {
+            log.error(exception.getMessage());
+        }
     }
 }

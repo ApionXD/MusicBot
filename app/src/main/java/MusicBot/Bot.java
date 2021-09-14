@@ -1,6 +1,7 @@
 package MusicBot;
 
 import MusicBot.audio.MusicUtil;
+import MusicBot.command.SetPrefix;
 import MusicBot.command.audio.Part;
 import MusicBot.command.base.CommandUtil;
 import MusicBot.command.HelloWorld;
@@ -63,5 +64,6 @@ public class Bot {
         commandUtil.addCommands(new HelloWorld());
         commandUtil.addCommands(new Play());
         commandUtil.addCommands(new Part());
+        commandUtil.addCommands(new SetPrefix());
     }
 }
