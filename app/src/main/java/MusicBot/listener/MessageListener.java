@@ -14,7 +14,7 @@ public class MessageListener extends ListenerAdapter {
         super.onGuildMessageReceived(event);
         String guildID = event.getGuild().getId();
         log.debug("Got message in guild: " + guildID);
-        log.debug("Settings: " + MusicBot.musicBot.getSettingsManager().toString());
+        //log.debug("Settings: " + MusicBot.musicBot.getSettingsManager().toString());
         String guildPrefix = MusicBot.musicBot.getSettingsManager().getSettingsFromGuildID(guildID).getPrefix();
         String messageContents = event.getMessage().toString();
 

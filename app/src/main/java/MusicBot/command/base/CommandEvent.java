@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.StringTokenizer;
 
 @Getter
@@ -26,7 +27,7 @@ public class CommandEvent {
         words = Lists.newArrayList();
 
         new StringTokenizer(messageContents).asIterator().forEachRemaining(t -> words.add((String) t));
-        commandName = words.get(0);
+        commandName = words.get(0).toLowerCase();
         log.info("Running " + commandName);
         commandCalled = MusicBot.musicBot.getCommandUtil().getCommandFromName(commandName);
     }

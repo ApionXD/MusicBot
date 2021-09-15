@@ -15,9 +15,16 @@ public class SetPrefix extends Command {
     private static final String NAME = "setprefix";
     public SetPrefix() {
         this.setCommandName(NAME);
+        this.addValidArgNum(1);
     }
     @Override
     public void executeCommand(CommandEvent e) {
+        TextChannel origChannel = e.getOrigEvent().getChannel();
+        if (!super.hasValidArgs(e.getWords().size() - 1)){
+            EmbedBuilder builder = new EmbedBuilder(CommandUtil.BASE_EMBED).addField("You have entered the wrong amount of arguments for " + NAME,"", false);
+            origChannel.sendMessage(builder.build()).queue();
+            return;
+        }
         String newPrefix = e.getWords().get(1);
         String guildID = e.getOrigEvent().getGuild().getId();
         log.info("Changing prefix for guild " + guildID + " to " + newPrefix);
@@ -25,7 +32,6 @@ public class SetPrefix extends Command {
         s.setPrefix(newPrefix);
         MusicBot.musicBot.getSettingsManager().saveSettingsForGuild(guildID);
         boolean success = s.getPrefix().equals(newPrefix);
-        TextChannel t = e.getOrigEvent().getChannel();
         EmbedBuilder builder = new EmbedBuilder(CommandUtil.BASE_EMBED);
         if (success) {
             builder.addField("Successfully set prefix to " + newPrefix, "", false);
@@ -33,6 +39,6 @@ public class SetPrefix extends Command {
         else {
             builder.addField("Failed to set prefix!", "", false);
         }
-        t.sendMessage(builder.build()).queue();
+        origChannel.sendMessage(builder.build()).queue();
     }
 }

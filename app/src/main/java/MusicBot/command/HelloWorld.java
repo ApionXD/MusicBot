@@ -11,12 +11,20 @@ public class HelloWorld extends Command {
     private static final String NAME = "hello";
     public HelloWorld() {
         this.setCommandName(NAME);
+        this.addValidArgNum(0);
     }
 
     @Override
     public void executeCommand(CommandEvent e) {
         TextChannel origChannel = e.getOrigEvent().getChannel();
+        if (!super.hasValidArgs(e.getWords().size() - 1)){
+            EmbedBuilder builder = new EmbedBuilder(CommandUtil.BASE_EMBED).addField("You have entered the wrong amount of arguments for " + NAME,"", false);
+            origChannel.sendMessage(builder.build()).queue();
+            return;
+        }
+
         MessageEmbed resultEmbed = new EmbedBuilder(CommandUtil.BASE_EMBED).addField("", "Hello, world!", false).build();
         origChannel.sendMessage(resultEmbed).queue();
     }
+
 }
