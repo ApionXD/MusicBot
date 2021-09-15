@@ -25,6 +25,7 @@ public class PropManager {
         return properties;
     }
     //There isn't actually a way for IOExceptions to be thrown here, they are handled when all property files are read
+    //No real reason to use sneakythrows here though, this could be easily wrapped in a try/catch
     @SneakyThrows
     public static void saveProperties(Properties properties, Path propFile) {
         properties.store(new FileWriter(propFile.toFile()), "");

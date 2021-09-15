@@ -24,6 +24,9 @@ import java.util.concurrent.ExecutionException;
 @Getter
 @Slf4j
 public class SettingsManager {
+    /*
+     * Maps guildIDs to settings
+     */
     private LoadingCache<String, Settings> settingMap;
 
 
@@ -32,14 +35,26 @@ public class SettingsManager {
         genCache();
         log.debug("Finished initializing SettingsManager!");
     }
+    /*
+     * Initializes a new cache with 100 maximum entries
+     * Maybe reduce number of settings cached?
+     *
+     */
     private void genCache() {
         log.debug("Generating cache!");
         settingMap = CacheBuilder.newBuilder()
                 .maximumSize(100)
                 .build(new CacheLoader<String, Settings>() {
                     @Override
+                    /*
+                     * TODO: Write a custom deserializer if needed
+                     *  Maybe also check that settings file isn't empty (Should only happen if file is deleted while bot is running)
+                     * Fetches Settings from disk
+                     * Uses Gson to deserialize json
+                     * Settings are saved to the current working directory under the settings folder with the name <Guild Name>.json
+                     */
                     public Settings load(String key) throws Exception {
-                        log.warn("Guild " + key + " settings is not in cache! Attempting to fetch it.");
+                        log.debug("Guild " + key + " settings is not in cache! Attempting to fetch it.");
                         String fileName = "settings\\" + MusicBot.musicBot.getJda().getGuildById(key).getName() + ".json";
                         Path filePath = FileManager.forceReadFile(fileName);
                         FileReader reader = new FileReader(fileName);
@@ -50,12 +65,17 @@ public class SettingsManager {
     }
     //Loops through all guilds, generates missing settings files.
     private void initSettings() {
-        log.debug(String.valueOf(MusicBot.musicBot == null));
+        //List of guilds visible to the JDA
         List<Guild> guildList = MusicBot.musicBot.getJda().getGuilds();
         log.info("Found " + guildList.size() + " guilds");
+        /*
+         * Loops through all guilds and either reads the existing settings file or generates a new default one.
+         * TODO: Check if all Settings fields are populated, if not, add defaults
+         *  Maybe make a list of fields and check if they exist
+         */
         guildList.forEach(g -> {
             Path settingFile = FileManager.forceReadFile("settings\\" + g.getName() + ".json");
-            log.info("Found setting file at " + settingFile);
+            log.info("Settings file for " + g.getName() + "at " + settingFile);
             FileWriter settingsWriter = null;
             try {
                 if (Files.readString(settingFile).length() == 0) {
@@ -81,6 +101,9 @@ public class SettingsManager {
             }
         });
     }
+    /*
+     * Gets Settings object from cache
+     */
     public Settings getSettingsFromGuildID(String id) {
         try {
             return settingMap.get(id);
@@ -90,11 +113,19 @@ public class SettingsManager {
         }
         return null;
     }
+    /*
+     * Sets all Settings that need extra initialization (e.g. if it needs values specific to each guild)
+     * Right now the only setting set is the channel that the bot listens in
+     */
     private void genDefaultComplexSettings(Settings s, String guildID) {
         final String channelID = MusicBot.musicBot.getJda().getGuildById(guildID).getDefaultChannel().getId();
         log.debug("Default command channel is: " + channelID);
         s.setCommandChannelID(channelID);
     }
+    /*
+     * Saves settings to disk
+     * Should be called whenever settings are updated (e.g. when a command that changes settings is called)
+     */
     public void saveSettingsForGuild(String guildID) {
         Settings s;
         StringBuilder fileName = new StringBuilder("settings\\");
@@ -107,6 +138,7 @@ public class SettingsManager {
             s = settingMap.get(guildID);
             log.info("Writing new settings to " + fileName.toString());
             FileWriter writer = new FileWriter(file.toFile());
+            //Serializes Settings and writes to file
             FileManager.GSON_INSTANCE.toJson(s, writer);
             writer.close();
             //log.info("Old settings file: " +  Files.readString(file));

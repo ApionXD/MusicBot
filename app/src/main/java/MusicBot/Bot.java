@@ -18,21 +18,57 @@ import javax.security.auth.login.LoginException;
 import java.util.Properties;
 
 @Slf4j @Getter
+/**
+ * An instance of this class represents a single bot account
+ * Will eventually be used for sharding
+ */
 public class Bot {
+    /*
+     * The settings manager for this bot instance
+     * Manages all settings for registered guilds, including caching and reading/saving to disk
+     */
     private SettingsManager settingsManager;
+    /*
+     * The command utility for this bot instance
+     * Caches and registers commands
+     */
     private CommandUtil commandUtil;
+    /*
+     * The music utility for this bot instance
+     * Creates and caches all LavaPlayer entities needed to play music
+     */
     private MusicUtil musicUtil;
 
+    /*
+     * The properties for this bot instance
+     * TODO: Add ability to have multiple property files for multiple bot instances
+     *  Maybe read/manage properties in main class?
+     *  Would need to read bot token separately
+     */
     private final Properties botProperties;
+    /*
+     * The Discord Bot Account token for this bot instance
+     * Needed to init JDA
+     */
     private final String botToken;
+    /*
+     * A boolean representing whether or not to construct a "light" JDA instance
+     */
     private final boolean setLight;
-    JDA jda;
+    /*
+     * The JDA instance for this bot
+     * TODO: Maybe put this in main class so that when sharding is implemented there is still only one JDA instance
+     */
+    private JDA jda;
 
     public Bot() {
+        //Loads the bot.properties file from disk
         botProperties = PropManager.loadBotPropertyFile();
+        //Reads the token from the properties
         botToken = botProperties.getProperty("token");
+        //Reads whether ot not to construct a "light" JDA
         setLight = Boolean.getBoolean(botProperties.getProperty("slowMode"));
-
+        //Builds the JDA, exits if token invalid.
         try {
             if (setLight) {
                 log.info("slowMode flag set in properties, launching in slow mode");
@@ -46,6 +82,7 @@ public class Bot {
             log.error("Token not valid! Please check your bot.properties file!");
             System.exit(1);
         }
+        //Waits for JDA to be ready, exits on error
         try {
             jda.awaitReady();
             log.info("JDA is ready!");
@@ -53,9 +90,14 @@ public class Bot {
         catch (InterruptedException e) {
             log.error(e.toString());
             log.debug("Error waiting for JDA to be ready.");
+            System.exit(1);
         }
 
     }
+    /*
+     * Adds all utilities, listeners, managers, and commands.
+     * This method is necessary as constructors in some managers require access to a JDA instance to retrieve data
+     */
     public void addUtil(){
         jda.addEventListener(new MessageListener());
         settingsManager = new SettingsManager();
