@@ -6,7 +6,9 @@ import MusicBot.command.audio.Part;
 import MusicBot.command.base.CommandUtil;
 import MusicBot.command.HelloWorld;
 import MusicBot.command.audio.Play;
+import MusicBot.command.base.reaction.ReactionUtil;
 import MusicBot.listener.MessageListener;
+import MusicBot.listener.ReactionListener;
 import MusicBot.properties.PropManager;
 import MusicBot.settings.SettingsManager;
 import lombok.Getter;
@@ -18,7 +20,7 @@ import javax.security.auth.login.LoginException;
 import java.util.Properties;
 
 @Slf4j @Getter
-/**
+/*
  * An instance of this class represents a single bot account
  * Will eventually be used for sharding
  */
@@ -33,6 +35,10 @@ public class Bot {
      * Caches and registers commands
      */
     private CommandUtil commandUtil;
+    /*
+     * Stores message IDs of commands we want to listen for reactions
+     */
+    private ReactionUtil reactionUtil;
     /*
      * The music utility for this bot instance
      * Creates and caches all LavaPlayer entities needed to play music
@@ -100,12 +106,15 @@ public class Bot {
      */
     public void addUtil(){
         jda.addEventListener(new MessageListener());
+        jda.addEventListener(new ReactionListener());
         settingsManager = new SettingsManager();
         commandUtil = new CommandUtil();
         musicUtil = new MusicUtil();
+        reactionUtil = new ReactionUtil();
         commandUtil.addCommands(new HelloWorld());
         commandUtil.addCommands(new Play());
         commandUtil.addCommands(new Part());
         commandUtil.addCommands(new SetPrefix());
+        reactionUtil.addCommands(new HelloWorldReaction());
     }
 }

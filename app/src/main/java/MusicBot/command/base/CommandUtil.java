@@ -1,5 +1,6 @@
 package MusicBot.command.base;
 
+import MusicBot.MusicBot;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -32,7 +33,13 @@ public class CommandUtil {
                         result = nextCommand;
                     }
                 }
-                return result == null ? ERROR_COMMAND : result;
+                if (result == null) {
+                    result = MusicBot.musicBot.getReactionUtil().getCommandFromName(key);
+                }
+                if (result == null) {
+                    result = ERROR_COMMAND;
+                }
+                return result;
             }
         });
         log.debug("CommandUtil done initializing!");
@@ -44,11 +51,9 @@ public class CommandUtil {
     public Command getCommandFromName(String name) {
         try {
             return commandCache.get(name);
+        } catch (ExecutionException exception) {
+            exception.printStackTrace();
         }
-        catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return ERROR_COMMAND;
+        return null;
     }
-
 }
