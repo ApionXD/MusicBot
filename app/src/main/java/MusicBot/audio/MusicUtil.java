@@ -77,6 +77,10 @@ public class MusicUtil {
             exception.printStackTrace();
         }
     }
+    public void skipSong(String guildID) {
+        final TrackScheduler scheduler = getSchedulerFromID(guildID);
+        scheduler.skipTrack();
+    }
     public AudioPlayerManager getManagerFromID(String id){
         try {
             return managers.get(id);

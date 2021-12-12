@@ -5,6 +5,7 @@ import MusicBot.command.HelloWorldReaction;
 import MusicBot.command.SetPrefix;
 import MusicBot.command.audio.Part;
 import MusicBot.command.audio.Request;
+import MusicBot.command.audio.Skip;
 import MusicBot.command.base.CommandUtil;
 import MusicBot.command.HelloWorld;
 import MusicBot.command.audio.Play;
@@ -113,11 +114,15 @@ public class Bot {
         commandUtil = new CommandUtil();
         musicUtil = new MusicUtil();
         reactionUtil = new ReactionUtil();
+
         commandUtil.addCommands(new HelloWorld());
         commandUtil.addCommands(new Play());
         commandUtil.addCommands(new Part());
         commandUtil.addCommands(new SetPrefix());
+        commandUtil.addCommands(new Skip());
+
         reactionUtil.addCommands(new HelloWorldReaction());
         reactionUtil.addCommands(new Request());
+
     }
 }

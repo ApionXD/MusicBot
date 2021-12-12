@@ -77,6 +77,9 @@ public class TrackScheduler extends AudioEventAdapter {
         player.playTrack(tracks.get(0));
         sendSongMessage(trackInfo);
     }
+    public void skipTrack() {
+        player.stopTrack();
+    }
     private void sendSongMessage(AudioTrackInfo trackInfo) {
         Guild guild = MusicBot.musicBot.getJda().getGuildById(guildID);
         String channelID = MusicBot.musicBot.getSettingsManager().getSettingsFromGuildID(guildID).getCommandChannelID();
