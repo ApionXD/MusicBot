@@ -15,20 +15,17 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 
 @Getter
 @Slf4j
-public class LoadResult implements AudioLoadResultHandler {
+public class PlayLoadResult extends BaseLoadResult {
     private final AudioPlayer player;
     private final TrackScheduler scheduler;
-    private final String guildID;
-    private final String outputChannelID;
 
-    public LoadResult(CommandEvent e) {
+    public PlayLoadResult(CommandEvent e) {
+        super(e);
         log.trace("Constructing LoadListener");
-        guildID = e.getOrigEvent().getGuild().getId();
         MusicUtil util = MusicBot.musicBot.getMusicUtil();
-        player = util.getPlayerFromID(guildID);
-        scheduler = util.getSchedulerFromID(guildID);
-        outputChannelID = MusicBot.musicBot.getSettingsManager().getSettingsFromGuildID(guildID).getCommandChannelID();
-        log.trace("Done constructing LoadListener");
+        player = util.getPlayerFromID(this.getGuildID());
+        scheduler = util.getSchedulerFromID(this.getGuildID());
+        log.trace("Done constructing PlayLoadResult");
     }
     @Override
     public void trackLoaded(AudioTrack track) {
@@ -55,8 +52,8 @@ public class LoadResult implements AudioLoadResultHandler {
         EmbedBuilder resultingEmbed = new EmbedBuilder(CommandUtil.BASE_EMBED).setDescription("Couldn't find a song at that link!");
         sendMessageToOriginalChannel(resultingEmbed.build());
         if (scheduler.getTracks().size() == 0) {
-            log.info("No tracks to play for guild " + guildID);
-            MusicBot.musicBot.getJda().getGuildById(guildID).getAudioManager().closeAudioConnection();
+            log.info("No tracks to play for guild " + this.getGuildID());
+            MusicBot.musicBot.getJda().getGuildById(this.getGuildID()).getAudioManager().closeAudioConnection();
         }
 
     }
@@ -65,8 +62,5 @@ public class LoadResult implements AudioLoadResultHandler {
     public void loadFailed(FriendlyException exception) {
         EmbedBuilder resultingEmbed = new EmbedBuilder(CommandUtil.BASE_EMBED).addField("Command failed with exception: ", exception.getMessage(), true);
         sendMessageToOriginalChannel(resultingEmbed.build());
-    }
-    private void sendMessageToOriginalChannel(MessageEmbed m) {
-        MusicBot.musicBot.getJda().getGuildById(guildID).getTextChannelById(outputChannelID).sendMessage(m).queue();
     }
 }
