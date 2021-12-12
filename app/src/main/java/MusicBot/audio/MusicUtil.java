@@ -8,9 +8,12 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import lombok.extern.slf4j.Slf4j;
+import net.dv8tion.jda.api.managers.AudioManager;
 
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 @Slf4j
 public class MusicUtil {
@@ -61,7 +64,13 @@ public class MusicUtil {
             AudioPlayerManager mgr = managers.get(guildID);
             AudioPlayer player = players.get(guildID);
             TrackScheduler scheduler = schedulers.get(guildID);
-            LoadResult result = new LoadResult(e);
+            //Might have concurrency issues, but that shouldn't be a problem.
+            AudioManager m = e.getOrigEvent().getGuild().getAudioManager();
+            log.debug("Setting sound handler.");
+            m.setSendingHandler(getSendHandler(guildID));
+            log.debug("Joining channel.");
+            m.openAudioConnection(e.getOrigEvent().getGuild().getVoiceChannels().get(0));
+            PlayLoadResult result = new PlayLoadResult(e);
             mgr.loadItem(link, result);
         }
         catch (ExecutionException exception) {
@@ -92,6 +101,29 @@ public class MusicUtil {
         }
         return null;
     }
-
+    public void sendSongInfo(CommandEvent e) {
+        try {
+            String guildID = e.getOrigEvent().getGuild().getId();
+            String link = e.getWords().get(1);
+            AudioPlayerManager mgr = managers.get(guildID);
+            AudioPlayer player = players.get(guildID);
+            TrackScheduler scheduler = schedulers.get(guildID);
+            InfoLoadResult result = new InfoLoadResult(e);
+            Future<Void> resultFuture = mgr.loadItem(link, result);
+            while (!resultFuture.isDone()) {
+                log.info("Getting song info");
+                try {
+                    Thread.sleep(250);
+                }
+                catch (InterruptedException ex) {
+                    log.error("Error waiting for song info!");
+                    log.debug(ex.toString());
+                }
+            }
+        }
+        catch (ExecutionException exception) {
+            exception.printStackTrace();
+        }
+    }
 }
 

@@ -28,12 +28,6 @@ public class Play extends Command {
         log.debug("Getting musicutil");
         MusicUtil musicUtil = MusicBot.musicBot.getMusicUtil();
         String guildID = e.getOrigEvent().getGuild().getId();
-        //Might have concurrency issues, but that shouldn't be a problem.
-        AudioManager m = e.getOrigEvent().getGuild().getAudioManager();
-        log.debug("Setting sound handler.");
-        m.setSendingHandler(musicUtil.getSendHandler(guildID));
-        log.debug("Joining channel.");
-        m.openAudioConnection(e.getOrigEvent().getGuild().getVoiceChannels().get(0));
         log.debug("Song loading...");
         musicUtil.queueSong(guildID, e.getWords().get(1), e);
     }

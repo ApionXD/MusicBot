@@ -43,4 +43,8 @@ public class ReactionUtil extends CommandUtil {
         }
         return null;
     }
+    public void removeReactionMessage(String messageID) {
+        reactionMessages.remove(messageID);
+        reactionCommandCache.invalidate(messageID);
+    }
 }
