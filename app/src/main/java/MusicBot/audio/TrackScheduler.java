@@ -38,11 +38,14 @@ public class TrackScheduler extends AudioEventAdapter {
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
         super.onTrackEnd(player, track, endReason);
+        tracks.remove(track);
         log.warn("Num tracks: " + tracks.size());
         log.debug(track.getInfo().title + " ended, playing next.");
-        if (tracks.size() > 0) {
+        if (tracks.size() == 0) {
             log.debug("No tracks left to play!");
-            tracks.remove(0);
+            isPlaying = false;
+        }
+        else {
             final AudioTrack newTrack = tracks.get(0);
             player.playTrack(newTrack);
             sendSongMessage(newTrack.getInfo());
@@ -79,12 +82,16 @@ public class TrackScheduler extends AudioEventAdapter {
         String channelID = MusicBot.musicBot.getSettingsManager().getSettingsFromGuildID(guildID).getCommandChannelID();
         TextChannel channel = guild.getTextChannelById(channelID);
         final long trackSeconds = trackInfo.length / 1000;
-        final String trackLength = (trackSeconds / 60) + ":" + (trackSeconds % 60);
+        final StringBuilder trackLength = new StringBuilder((trackSeconds / 60) + ":" + (trackSeconds % 60));
+        //Adds a zero if the number of seconds is only one digit
+        if (trackLength.toString().length() == 3) {
+            trackLength.insert(2, "0");
+        }
         EmbedBuilder resultingEmbed = new EmbedBuilder(CommandUtil.BASE_EMBED)
                 .setTitle("Now Playing: ", trackInfo.uri)
                 .addField("Title", trackInfo.title, true)
                 .addField("Artist", trackInfo.author, true)
-                .addField("Length", trackLength, true);
+                .addField("Length", trackLength.toString(), true);
         channel.sendMessage(resultingEmbed.build()).queue();
     }
     public void clearAllTracks() {
