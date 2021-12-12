@@ -19,9 +19,13 @@ import java.util.concurrent.TimeUnit;
 
 public class List extends PaginatedCommand {
     public static final String NAME = "list";
+    public static final String SHORT_HELP_DESC = "Lists current songs in queue";
+    public static final String LONG_HELP_DESC = "Gets a list of the the songs in queue and their positions";
     public List() {
         this.setCommandName(NAME);
         this.addValidArgNum(0);
+        this.setShortHelpDesc(SHORT_HELP_DESC);
+        this.setLongHelpDesc(LONG_HELP_DESC);
     }
 
     @Override

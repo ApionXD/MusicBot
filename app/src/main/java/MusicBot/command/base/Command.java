@@ -12,10 +12,13 @@ import java.util.HashSet;
 @Setter
 public abstract class Command {
     private String commandName;
+    private String shortHelpDesc;
+    private String longHelpDesc;
     private HashSet<Integer> validArgNums;
-
     public Command() {
         validArgNums = Sets.newHashSet();
+        shortHelpDesc = "There is no help description set for this command";
+        longHelpDesc = "There is no help description set for this command";
     }
     public void executeCommand(CommandEvent e) {
         TextChannel origChannel = e.getOrigEvent().getChannel();

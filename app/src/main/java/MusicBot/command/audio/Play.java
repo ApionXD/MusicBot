@@ -13,9 +13,13 @@ import net.dv8tion.jda.api.managers.AudioManager;
 @Slf4j
 public class Play extends Command {
     public static final String NAME = "play";
+    public static final String SHORT_HELP_DESC = "Plays a song/playlist";
+    public static final String LONG_HELP_DESC = "Plays a song/playlist, no voting needed";
     public Play() {
         this.setCommandName(NAME);
         this.addValidArgNum(1);
+        this.setShortHelpDesc(SHORT_HELP_DESC);
+        this.setLongHelpDesc(LONG_HELP_DESC);
     }
     @Override
     public void executeCommand(CommandEvent e) {

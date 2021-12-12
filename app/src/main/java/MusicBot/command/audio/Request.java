@@ -22,12 +22,16 @@ import java.util.*;
 //TODO Add settings, like voteTime, percentage of thumbs up, custom reactions
 public class Request extends ReactionCommand {
     private final static String NAME = "rq";
+    public static final String SHORT_HELP_DESC = "Request a song/playlist";
+    public static final String LONG_HELP_DESC = "Allows user to request a song or a playlist, and other users to vote on the request";
     private final static String THUMBS_DOWN = "U+1f44e";
     private final static String THUMBS_UP = "U+1f44d";
 
     public Request() {
         this.setCommandName(NAME);
         this.addValidArgNum(1);
+        this.setShortHelpDesc(SHORT_HELP_DESC);
+        this.setLongHelpDesc(LONG_HELP_DESC);
     }
     @Override
     public void executeCommand(CommandEvent e) {

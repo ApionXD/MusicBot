@@ -11,9 +11,13 @@ import net.dv8tion.jda.api.entities.TextChannel;
 
 public class Part extends Command {
     private static final String NAME = "part";
+    public static final String SHORT_HELP_DESC = "Disconnects MusicBot from all connected channels";
+    public static final String LONG_HELP_DESC = "Disconnects MusicBot from all connected channels, and clears the queue";
     public Part() {
         this.setCommandName(NAME);
         this.addValidArgNum(0);
+        this.setShortHelpDesc(SHORT_HELP_DESC);
+        this.setLongHelpDesc(LONG_HELP_DESC);
     }
     @Override
     public void executeCommand(CommandEvent e) {

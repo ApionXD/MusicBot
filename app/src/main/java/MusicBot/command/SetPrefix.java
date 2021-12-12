@@ -13,9 +13,13 @@ import net.dv8tion.jda.api.entities.TextChannel;
 @Slf4j
 public class SetPrefix extends Command {
     private static final String NAME = "setprefix";
+    public static final String SHORT_HELP_DESC = "Sets the prefix to invoke the bot";
+    public static final String LONG_HELP_DESC = "Sets the prefix to invoke the bot";
     public SetPrefix() {
         this.setCommandName(NAME);
         this.addValidArgNum(1);
+        this.setShortHelpDesc(SHORT_HELP_DESC);
+        this.setLongHelpDesc(LONG_HELP_DESC);
     }
     @Override
     public void executeCommand(CommandEvent e) {
