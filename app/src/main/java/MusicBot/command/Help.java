@@ -37,8 +37,10 @@ public class Help extends PaginatedCommand {
                 builder = new EmbedBuilder(CommandUtil.BASE_EMBED);
             }
         }
-        builder.addField("", fieldTitle.toString(), false);
-        addPage(builder.build());
+        if (i % 10 != 0) {
+            builder.addField("", fieldTitle.toString(), false);
+            addPage(builder.build());
+        }
         printFirstPage(e);
     }
 }

@@ -30,6 +30,7 @@ public class List extends PaginatedCommand {
         ArrayList<AudioTrack> tracks = MusicBot.musicBot.getMusicUtil().getSchedulerFromID(e.getOrigEvent().getGuild().getId()).getTracks();
         EmbedBuilder builder = new EmbedBuilder(CommandUtil.BASE_EMBED).setTitle("Music Queue:");
         StringBuilder fieldTitle = new StringBuilder();
+        int index = 1;
         for(int i = 1; i < tracks.size(); i++) {
             AudioTrackInfo info = tracks.get(i).getInfo();
             int trackSeconds = (int) (info.length / 1000);
@@ -54,9 +55,13 @@ public class List extends PaginatedCommand {
                 builder = new EmbedBuilder(CommandUtil.BASE_EMBED);
                 fieldTitle = new StringBuilder();
             }
+            index = i;
         }
-        builder.addField("", fieldTitle.toString(), false);
-        addPage(builder.build());
-       printFirstPage(e);
+        if (index % 10 != 0) {
+            builder.addField("", fieldTitle.toString(), false);
+            addPage(builder.build());
+        }
+
+        printFirstPage(e);
     }
 }

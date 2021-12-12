@@ -18,7 +18,7 @@ public abstract class PaginatedCommand extends ReactionCommand {
     protected static String RIGHT_ARROW = "U+27a1";
     @Getter
     private List<MessageEmbed> pages;
-    int curPage = 1;
+    int curPage = 0;
     public PaginatedCommand() {
         pages = Lists.newArrayList();
     }
@@ -27,9 +27,15 @@ public abstract class PaginatedCommand extends ReactionCommand {
     }
 
     @Override
+    public void executeCommand(CommandEvent e) {
+        super.executeCommand(e);
+        pages = Lists.newArrayList();
+    }
+
+    @Override
     public void handleReactionEvent(ReactionEvent e) {
         String reaction = e.getReaction().getReactionEmote().getAsCodepoints();
-        if (reaction.equals(LEFT_ARROW) && curPage != 1) {
+        if (reaction.equals(LEFT_ARROW) && curPage != 0) {
             curPage--;
         }
         if (reaction.equals(RIGHT_ARROW) && curPage < pages.size()) {
@@ -37,11 +43,11 @@ public abstract class PaginatedCommand extends ReactionCommand {
         }
         Message message = e.getOrigEvent().retrieveMessage().complete();
         message.clearReactions().complete();
-        message.editMessage(pages.get(curPage - 1)).complete();
+        message.editMessage(pages.get(curPage)).complete();
         if (curPage != 0) {
             message.addReaction(LEFT_ARROW).queue();
         }
-        if (curPage != pages.size()) {
+        if (curPage != pages.size() - 1) {
             message.addReaction(RIGHT_ARROW).queue();
         }
     }
