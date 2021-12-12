@@ -18,10 +18,10 @@ public class Part extends Command {
     @Override
     public void executeCommand(CommandEvent e) {
         super.executeCommand(e);
-        TextChannel origChannel = e.getOrigEvent().getChannel();
-        Guild g = e.getOrigEvent().getGuild();
-        MusicUtil musicUtil = MusicBot.musicBot.getMusicUtil();
-        String guildID = g.getId();
+        final TextChannel origChannel = e.getOrigEvent().getChannel();
+        final Guild g = e.getOrigEvent().getGuild();
+        final MusicUtil musicUtil = MusicBot.musicBot.getMusicUtil();
+        final String guildID = g.getId();
         g.getAudioManager().closeAudioConnection();
         EmbedBuilder builder = new EmbedBuilder(CommandUtil.BASE_EMBED).addField("Disconnected Music Bot from all channels!", "", false);
         origChannel.sendMessage(builder.build()).queue();

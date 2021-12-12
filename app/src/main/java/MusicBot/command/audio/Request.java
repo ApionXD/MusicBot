@@ -14,14 +14,16 @@ import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageReaction;
+import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.util.*;
 
 @Slf4j
+//TODO Add settings, like voteTime, percentage of thumbs up, custom reactions
 public class Request extends ReactionCommand {
     private final static String NAME = "rq";
-
-    //Maps a messageID to a map that gives the count of an Emote given the emote
+    private final static String THUMBS_DOWN = "U+1f44e";
+    private final static String THUMBS_UP = "U+1f44d";
 
     public Request() {
         this.setCommandName(NAME);
@@ -30,12 +32,13 @@ public class Request extends ReactionCommand {
     @Override
     public void executeCommand(CommandEvent e) {
         super.executeCommand(e);
-        MusicUtil util = MusicBot.musicBot.getMusicUtil();
+        final MusicUtil util = MusicBot.musicBot.getMusicUtil();
+        final TextChannel channel =  e.getOrigEvent().getGuild().getTextChannels().get(0);
         util.sendSongInfo(e);
         log.debug("Message ID of song info message: " + getResultMessageID());
-        e.getOrigEvent().getGuild().getTextChannels().get(0).addReactionById(getResultMessageID(), "U+1f44d").queue();
-        e.getOrigEvent().getGuild().getTextChannels().get(0).addReactionById(getResultMessageID(), "U+1f44e").queue();
-        TimerTask task = new TimerTask() {
+        channel.addReactionById(getResultMessageID(), THUMBS_UP).queue();
+        channel.addReactionById(getResultMessageID(), THUMBS_DOWN).queue();
+        final TimerTask task = new TimerTask() {
             @Override
             public void run() {
                 HashMap<String, Integer> reactions = getReactionCount();
@@ -44,12 +47,12 @@ public class Request extends ReactionCommand {
                 reactions.entrySet().forEach(emote -> {
                     log.debug(emote.getKey() + ": " + emote.getValue());
                 });
-                if (reactions.get("U+1f44d") > reactions.get("U+1f44e")) {
+                if (reactions.get(THUMBS_UP) > reactions.get(THUMBS_DOWN)) {
                     util.queueSong(e.getOrigEvent().getGuild().getId(), e.getWords().get(1), e);
                 }
             }
         };
-        Timer timer = new Timer(true);
+        final Timer timer = new Timer(true);
         timer.schedule(task, 30000);
     }
 }

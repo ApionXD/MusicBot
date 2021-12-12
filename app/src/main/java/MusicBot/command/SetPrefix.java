@@ -19,16 +19,11 @@ public class SetPrefix extends Command {
     }
     @Override
     public void executeCommand(CommandEvent e) {
-        TextChannel origChannel = e.getOrigEvent().getChannel();
-        if (!super.hasValidArgs(e.getWords().size() - 1)){
-            EmbedBuilder builder = new EmbedBuilder(CommandUtil.BASE_EMBED).addField("You have entered the wrong amount of arguments for " + NAME,"", false);
-            origChannel.sendMessage(builder.build()).queue();
-            return;
-        }
-        String newPrefix = e.getWords().get(1);
-        String guildID = e.getOrigEvent().getGuild().getId();
+        final TextChannel origChannel = e.getOrigEvent().getChannel();
+        final String newPrefix = e.getWords().get(1);
+        final String guildID = e.getOrigEvent().getGuild().getId();
+        final Settings s = MusicBot.musicBot.getSettingsManager().getSettingsFromGuildID(e.getOrigEvent().getGuild().getId());
         log.info("Changing prefix for guild " + guildID + " to " + newPrefix);
-        Settings s = MusicBot.musicBot.getSettingsManager().getSettingsFromGuildID(e.getOrigEvent().getGuild().getId());
         s.setPrefix(newPrefix);
         MusicBot.musicBot.getSettingsManager().saveSettingsForGuild(guildID);
         boolean success = s.getPrefix().equals(newPrefix);
