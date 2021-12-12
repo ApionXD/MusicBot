@@ -1,5 +1,6 @@
-package MusicBot;
+package MusicBot.command;
 
+import MusicBot.MusicBot;
 import MusicBot.command.base.CommandEvent;
 import MusicBot.command.base.CommandUtil;
 import MusicBot.command.base.reaction.ReactionCommand;
