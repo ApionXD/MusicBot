@@ -48,7 +48,7 @@ public class TrackScheduler extends AudioEventAdapter {
         else {
             final AudioTrack newTrack = tracks.get(0);
             player.playTrack(newTrack);
-            sendSongMessage(newTrack.getInfo());
+            sendPlayingMessage(newTrack.getInfo());
         }
 
     }
@@ -67,6 +67,9 @@ public class TrackScheduler extends AudioEventAdapter {
 
     public void addTrackToQueue(AudioTrack track) {
         tracks.add(track);
+        if (tracks.size() > 1) {
+            sendQueueMessage(track.getInfo(), tracks.size());
+        }
     }
 
     public void playFirstTrackInQueue() {
@@ -75,12 +78,12 @@ public class TrackScheduler extends AudioEventAdapter {
         final AudioTrack track = tracks.get(0);
         final AudioTrackInfo trackInfo = track.getInfo();
         player.playTrack(tracks.get(0));
-        sendSongMessage(trackInfo);
+        sendPlayingMessage(trackInfo);
     }
     public void skipTrack() {
         player.stopTrack();
     }
-    private void sendSongMessage(AudioTrackInfo trackInfo) {
+    private void sendPlayingMessage(AudioTrackInfo trackInfo) {
         Guild guild = MusicBot.musicBot.getJda().getGuildById(guildID);
         String channelID = MusicBot.musicBot.getSettingsManager().getSettingsFromGuildID(guildID).getCommandChannelID();
         TextChannel channel = guild.getTextChannelById(channelID);
@@ -97,8 +100,27 @@ public class TrackScheduler extends AudioEventAdapter {
                 .addField("Length", trackLength.toString(), true);
         channel.sendMessage(resultingEmbed.build()).queue();
     }
+    private void sendQueueMessage(AudioTrackInfo trackInfo, int posInSchedule) {
+        Guild guild = MusicBot.musicBot.getJda().getGuildById(guildID);
+        String channelID = MusicBot.musicBot.getSettingsManager().getSettingsFromGuildID(guildID).getCommandChannelID();
+        TextChannel channel = guild.getTextChannelById(channelID);
+        final long trackSeconds = trackInfo.length / 1000;
+        final StringBuilder trackLength = new StringBuilder((trackSeconds / 60) + ":" + (trackSeconds % 60));
+        //Adds a zero if the number of seconds is only one digit
+        if (trackLength.toString().length() == 3) {
+            trackLength.insert(2, "0");
+        }
+        EmbedBuilder resultingEmbed = new EmbedBuilder(CommandUtil.BASE_EMBED)
+                .setTitle("Song Info", trackInfo.uri)
+                .addField("Title", trackInfo.title, true)
+                .addField("Artist", trackInfo.author, true)
+                .addField("Length", trackLength.toString(), true)
+                .addField("Queue Position", posInSchedule + "", false);
+        channel.sendMessage(resultingEmbed.build()).queue();
+    }
     public void clearAllTracks() {
         log.info("Clearing all tracks for " + guildID);
         tracks = Lists.newArrayList();
+        isPlaying = false;
     }
 }
