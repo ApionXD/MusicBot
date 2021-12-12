@@ -57,19 +57,6 @@ public class List extends PaginatedCommand {
         }
         builder.addField("", fieldTitle.toString(), false);
         addPage(builder.build());
-        Message message = e.getOrigEvent().getChannel().sendMessage(getPages().get(0)).complete();
-        if (getPages().size() > 1) {
-            message.addReaction(RIGHT_ARROW).queue();
-        }
-        String messageID = message.getId();
-        MusicBot.musicBot.getReactionUtil().addReactionMessage(messageID, this);
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                MusicBot.musicBot.getReactionUtil().removeReactionMessage(messageID);
-            }
-        };
-        Timer timer = new Timer(true);
-        timer.schedule(task, 30000);
+       printFirstPage(e);
     }
 }

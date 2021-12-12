@@ -1,5 +1,7 @@
 package MusicBot.command.base.reaction.paged;
 
+import MusicBot.MusicBot;
+import MusicBot.command.base.CommandEvent;
 import MusicBot.command.base.reaction.ReactionCommand;
 import MusicBot.command.base.reaction.ReactionEvent;
 import com.google.common.collect.Lists;
@@ -8,6 +10,8 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public abstract class PaginatedCommand extends ReactionCommand {
     protected static String LEFT_ARROW = "U+2b05";
@@ -40,5 +44,21 @@ public abstract class PaginatedCommand extends ReactionCommand {
         if (curPage != pages.size()) {
             message.addReaction(RIGHT_ARROW).queue();
         }
+    }
+    public void printFirstPage(CommandEvent e) {
+        Message message = e.getOrigEvent().getChannel().sendMessage(getPages().get(0)).complete();
+        if (getPages().size() > 1) {
+            message.addReaction(RIGHT_ARROW).queue();
+        }
+        String messageID = message.getId();
+        MusicBot.musicBot.getReactionUtil().addReactionMessage(messageID, (ReactionCommand) e.getCommandCalled());
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                MusicBot.musicBot.getReactionUtil().removeReactionMessage(messageID);
+            }
+        };
+        Timer timer = new Timer(true);
+        timer.schedule(task, 30000);
     }
 }

@@ -2,6 +2,7 @@ package MusicBot;
 
 import MusicBot.audio.MusicUtil;
 import MusicBot.command.HelloWorldReaction;
+import MusicBot.command.Help;
 import MusicBot.command.SetPrefix;
 import MusicBot.command.audio.*;
 import MusicBot.command.base.CommandUtil;
@@ -121,6 +122,6 @@ public class Bot {
         reactionUtil.addCommands(new HelloWorldReaction());
         reactionUtil.addCommands(new Request());
         reactionUtil.addCommands(new List());
-
+        reactionUtil.addCommands(new Help());
     }
 }

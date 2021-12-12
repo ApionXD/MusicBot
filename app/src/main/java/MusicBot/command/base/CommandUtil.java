@@ -5,6 +5,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Sets;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -17,6 +18,7 @@ import java.util.concurrent.ExecutionException;
 public class CommandUtil {
     private static final Command ERROR_COMMAND = new BasicError();
     public static final MessageEmbed BASE_EMBED = new EmbedBuilder().setColor(255).setFooter("An improved music bot!").setAuthor("MusicBot").build();
+    @Getter
     private final HashSet<Command> commands;
     private final LoadingCache<String, Command> commandCache;
 
