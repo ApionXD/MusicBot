@@ -8,6 +8,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
+import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.managers.AudioManager;
@@ -31,7 +32,8 @@ public class MusicUtil {
             @Override
             public AudioPlayerManager load(String key) throws Exception {
                 DefaultAudioPlayerManager newManager = new DefaultAudioPlayerManager();
-                AudioSourceManagers.registerRemoteSources(newManager);
+                //AudioSourceManagers.registerRemoteSources(newManager);
+                newManager.registerSourceManager(new YoutubeAudioSourceManager(true));
                 return newManager;
             }
         });

@@ -19,13 +19,21 @@ public class Play extends Command {
     }
     @Override
     public void executeCommand(CommandEvent e) {
-        super.executeCommand(e);
+
         TextChannel origChannel = e.getOrigEvent().getChannel();
         log.debug("Getting musicutil");
         MusicUtil musicUtil = MusicBot.musicBot.getMusicUtil();
         String guildID = e.getOrigEvent().getGuild().getId();
         log.debug("Song loading...");
-        musicUtil.queueSong(guildID, e.getWords().get(1), e);
+        String identifier = "";
+        for (int i = 1; i < e.getWords().size(); i++) {
+            String s = e.getWords().get(i);
+            identifier += s + " ";
+        }
+        if (!identifier.contains("http://") && !identifier.contains("https://")) {
+            identifier = "ytsearch:" + identifier;
+        }
+        musicUtil.queueSong(guildID, identifier, e);
     }
 
 }

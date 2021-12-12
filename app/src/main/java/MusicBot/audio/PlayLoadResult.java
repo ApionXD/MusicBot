@@ -38,12 +38,17 @@ public class PlayLoadResult extends BaseLoadResult {
 
     @Override
     public void playlistLoaded(AudioPlaylist playlist) {
-        log.debug("Loading playlist!");
-        playlist.getTracks().forEach(p -> {
-            scheduler.addTrackToQueue(p);
-        });
-        if (!scheduler.isPlaying()) {
-            scheduler.playFirstTrackInQueue();
+        if (!playlist.isSearchResult()) {
+            log.debug("Loading playlist!");
+            playlist.getTracks().forEach(p -> {
+                scheduler.addTrackToQueue(p);
+            });
+            if (!scheduler.isPlaying()) {
+                scheduler.playFirstTrackInQueue();
+            }
+        }
+        else {
+            trackLoaded(playlist.getTracks().get(0));
         }
     }
 
