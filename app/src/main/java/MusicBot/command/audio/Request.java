@@ -29,6 +29,7 @@ public class Request extends ReactionCommand {
     }
     @Override
     public void executeCommand(CommandEvent e) {
+        super.executeCommand(e);
         MusicUtil util = MusicBot.musicBot.getMusicUtil();
         util.sendSongInfo(e);
         log.debug("Message ID of song info message: " + getResultMessageID());

@@ -4,6 +4,7 @@ import com.google.common.collect.Sets;
 import lombok.Getter;
 import lombok.Setter;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.util.HashSet;
 
@@ -16,7 +17,14 @@ public abstract class Command {
     public Command() {
         validArgNums = Sets.newHashSet();
     }
-    public abstract void executeCommand(CommandEvent e);
+    public void executeCommand(CommandEvent e) {
+        TextChannel origChannel = e.getOrigEvent().getChannel();
+        if (!hasValidArgs(e.getWords().size() - 1)){
+            EmbedBuilder builder = new EmbedBuilder(CommandUtil.BASE_EMBED).addField("You have entered the wrong amount of arguments for " + e.getCommandCalled().commandName,"", false);
+            origChannel.sendMessage(builder.build()).queue();
+            return;
+        }
+    }
     public boolean hasValidArgs(int numArgs) {
         if (validArgNums.size() == 0) {
             return true;

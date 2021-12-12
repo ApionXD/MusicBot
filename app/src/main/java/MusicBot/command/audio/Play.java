@@ -19,12 +19,8 @@ public class Play extends Command {
     }
     @Override
     public void executeCommand(CommandEvent e) {
+        super.executeCommand(e);
         TextChannel origChannel = e.getOrigEvent().getChannel();
-        if (!super.hasValidArgs(e.getWords().size() - 1)){
-            EmbedBuilder builder = new EmbedBuilder(CommandUtil.BASE_EMBED).addField("You have entered the wrong amount of arguments for " + NAME,"", false);
-            origChannel.sendMessage(builder.build()).queue();
-            return;
-        }
         log.debug("Getting musicutil");
         MusicUtil musicUtil = MusicBot.musicBot.getMusicUtil();
         String guildID = e.getOrigEvent().getGuild().getId();
