@@ -3,12 +3,9 @@ package MusicBot;
 import MusicBot.audio.MusicUtil;
 import MusicBot.command.HelloWorldReaction;
 import MusicBot.command.SetPrefix;
-import MusicBot.command.audio.Part;
-import MusicBot.command.audio.Request;
-import MusicBot.command.audio.Skip;
+import MusicBot.command.audio.*;
 import MusicBot.command.base.CommandUtil;
 import MusicBot.command.HelloWorld;
-import MusicBot.command.audio.Play;
 import MusicBot.command.base.reaction.ReactionUtil;
 import MusicBot.listener.MessageListener;
 import MusicBot.listener.ReactionListener;
@@ -123,6 +120,7 @@ public class Bot {
 
         reactionUtil.addCommands(new HelloWorldReaction());
         reactionUtil.addCommands(new Request());
+        reactionUtil.addCommands(new List());
 
     }
 }

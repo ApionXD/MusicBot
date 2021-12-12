@@ -18,8 +18,13 @@ public class ReactionListener extends ListenerAdapter {
         if (util.isListening(messageID)) {
             log.debug("Got reaction on listened message");
             MessageReaction reaction = e.getReaction();
-            ReactionEvent event = new ReactionEvent(e);
-            event.runReactionCommand();
+            if (e.getUser().isBot()) {
+                log.debug("Reaction is from bot, ignoring");
+            }
+            else {
+                ReactionEvent event = new ReactionEvent(e);
+                event.runReactionCommand();
+            }
         }
 
     }
